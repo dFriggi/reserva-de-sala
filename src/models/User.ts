@@ -1,4 +1,4 @@
-import { Classroom } from "./Classroom/Classroom";
+import { randomUUID } from "crypto";
 import { Reservation } from "./Reservation";
 
 export enum UserRole {
@@ -6,9 +6,16 @@ export enum UserRole {
   Student = "STUDENT",
 }
 
-export interface User {
-  id: string;
-  name: string;
-  role: UserRole;
+export class User {
+  private id: string;
   reservations?: Reservation[];
+
+  constructor(
+    public name: string,
+    public role: UserRole,
+  ) {
+    this.id = randomUUID();
+    this.name = name;
+    this.role = role;
+  }
 }
