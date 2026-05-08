@@ -1,4 +1,4 @@
-import { Classroom } from "./Classroom";
+import { randomUUID } from "crypto";
 import { Reservation } from "./Reservation";
 
 export enum UserRole {
@@ -14,7 +14,7 @@ export class User {
     public name: string,
     public role: UserRole,
   ) {
-    this.id = "id";
+    this.id = randomUUID();
     this.name = name;
     this.role = role;
   }

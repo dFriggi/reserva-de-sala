@@ -1,13 +1,10 @@
-import {
-  FirstReservationPolitics,
-  ReservationPolitics,
-} from "./ReservationPolitics";
+import { randomUUID } from "crypto";
 
 export abstract class Classroom {
   private id: string;
 
   constructor(private number: number) {
-    this.id = "id";
+    this.id = randomUUID();
     this.number = number;
   }
 }
