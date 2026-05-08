@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  TEACHER
+  STUDENT
+}
+
+model User {
+  id           String        @id
+  name         String
+  role         UserRole
+  reservations Reservation[]
+}
+
+enum ClassroomType {
+  STUDY
+  EXAM
+  GROUP_STUDY
+  LABORATORY
+}
+
+model Classroom {
+  id           String        @id
+  number       Int
+  type         ClassroomType
+  reservations Reservation[]
+}
+
+model Reservation {
+  id          String    @id
+  startDate   DateTime
+  endDate     DateTime
+  holder      User      @relation(fields: [holderId], references: [id])
+  holderId    String
+  classroom   Classroom @relation(fields: [classroomId], references: [id])
+  classroomId String
+}
+
+enum ReservationPoliticsType {
+  FIRST_RESERVATION
+  TEACHER
+}
+
+model ReservationPolitics {
+  id   String                  @id
+  type ReservationPoliticsType
+}
+
+model Notification {
+  id      String @id
+  message String
+}
