@@ -1,11 +1,30 @@
 import { randomUUID } from "crypto";
+import { Reservation } from "./Reservation";
 
 export abstract class Classroom {
   private id: string;
+  private reservations: Reservation[] = [];
 
   constructor(private number: number) {
     this.id = randomUUID();
-    this.number = number;
+  }
+
+  abstract getType(): string;
+
+  getId(): string {
+    return this.id;
+  }
+
+  getNumber(): number {
+    return this.number;
+  }
+
+  getReservations(): Reservation[] {
+    return this.reservations;
+  }
+
+  addReservation(reservation: Reservation): void {
+    this.reservations.push(reservation);
   }
 }
 
@@ -13,11 +32,17 @@ export class StudyClassroom extends Classroom {
   constructor(number: number) {
     super(number);
   }
+  getType(): string {
+    return "Estudo Individual";
+  }
 }
 
 export class ExamClassroom extends Classroom {
   constructor(number: number) {
     super(number);
+  }
+  getType(): string {
+    return "Prova";
   }
 }
 
@@ -25,10 +50,16 @@ export class GroupStudyClassroom extends Classroom {
   constructor(number: number) {
     super(number);
   }
+  getType(): string {
+    return "Trabalho em Grupo";
+  }
 }
 
 export class LaboratoryClassroom extends Classroom {
   constructor(number: number) {
     super(number);
+  }
+  getType(): string {
+    return "Laboratório";
   }
 }
