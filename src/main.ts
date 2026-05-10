@@ -39,8 +39,20 @@ const reservation1 = new Reservation(
   sala101.getId(),
 );
 
+//expect sucess
 if (service.createReservation(reservation1)) {
   console.log(`Reserva criada com sucesso para ${reservation1.classroomId}`);
+} else console.log("Reserva não foi criada");
+
+const reservation2 = new Reservation(
+  new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 14, 30),
+  new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 15, 30),
+  aluno2,
+  sala101.getId(),
+);
+
+if (service.createReservation(reservation2)) {
+  console.log(`Reserva criada com sucesso para ${reservation2.classroomId}`);
 } else console.log("Reserva não foi criada");
 
 repo.add(sala101);
