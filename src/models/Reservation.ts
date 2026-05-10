@@ -1,9 +1,24 @@
+import { randomUUID } from "crypto";
 import { User } from "./User";
 import { Classroom } from "./Classroom";
 
-export interface Reservation {
-  id: string;
-  startDate: Date;
-  endDate: Date;
-  classroom: Classroom;
+export class Reservation {
+  private id: string;
+
+  constructor(
+    public startDate: Date,
+    public endDate: Date,
+    public holder: User,
+    public classroomId: string,
+  ) {
+    this.id = randomUUID();
+  }
+
+  getId(): string {
+    return this.id;
+  }
+
+  overlaps(start: Date, end: Date): boolean {
+    return this.startDate < end && this.endDate > start;
+  }
 }

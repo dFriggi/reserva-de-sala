@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { Reservation } from "./Reservation";
 import { Notification } from "./Notification";
+import { Classroom } from "./Classroom";
 
 export enum UserRole {
   Teacher = "TEACHER",
@@ -9,8 +10,8 @@ export enum UserRole {
 
 export class User {
   private id: string;
-  reservations?: Reservation[] = [];
-  notifications?: Notification[] = [];
+  reservations?: Reservation[];
+  notifications?: Notification[];
 
   constructor(
     public name: string,
@@ -21,7 +22,8 @@ export class User {
     this.role = role;
   }
 
-  update(notification: Notification): void {
+  notify(classroom: Classroom, message: string) {
+    const notification = new Notification(message);
     console.log(`Notificação para ${this.name}: ${notification.message}`);
     this.notifications?.push(notification);
   }
