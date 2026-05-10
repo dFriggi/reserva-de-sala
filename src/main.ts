@@ -42,3 +42,6 @@ service.createReservation(res2);
 console.log(service.updateReservation(res1.getId(), h(15), h(17)) ? "✓ Atualizada" : "✗ Negada");
 
 console.log(service.cancelReservation(res2.getId()) ? "✓ Cancelada" : "✗ Não encontrada");
+
+console.log(`\nNotificações do ${professor.name}:`, professor.getNotifications().map((n) => n.message));
+console.log(`Notificações do ${aluno.name}:`, aluno.getNotifications().map((n) => n.message));
