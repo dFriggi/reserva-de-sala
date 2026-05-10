@@ -30,6 +30,10 @@ export abstract class Classroom {
     this.reservations.push(reservation);
   }
 
+  removeReservation(reservationId: string): void {
+    this.reservations = this.reservations.filter((r) => r.getId() !== reservationId);
+  }
+
   attach(user: User): void {
     if (!this.interested.includes(user)) this.interested.push(user);
   }

@@ -17,83 +17,28 @@ const sala201 = GroupStudyClassroomFactory.create(201);
 const sala301 = LaboratoryClassroomFactory.create(301);
 const sala401 = ExamClassroomFactory.create(401);
 
-const professor = new User("Prof. Silva", UserRole.Teacher);
-const aluno1 = new User("João", UserRole.Student);
-const aluno2 = new User("Maria", UserRole.Student);
-const hoje = new Date();
-sala101.addReservation(
-  new Reservation(
-    new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 10, 0),
-    new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 12, 0),
-    professor,
-    sala101.getId(),
-  ),
-);
-sala101.attach(aluno1);
-sala101.attach(aluno2);
-
-const reservation1 = new Reservation(
-  new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 14, 0),
-  new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 15, 0),
-  aluno1,
-  sala101.getId(),
-);
-
-//expect sucess
-if (service.createReservation(reservation1)) {
-  console.log(`Reserva criada com sucesso para ${reservation1.classroomId}`);
-} else console.log("Reserva não foi criada");
-
-const reservation2 = new Reservation(
-  new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 14, 30),
-  new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 15, 30),
-  aluno2,
-  sala101.getId(),
-);
-
-if (service.createReservation(reservation2)) {
-  console.log(`Reserva criada com sucesso para ${reservation2.classroomId}`);
-} else console.log("Reserva não foi criada");
-
 repo.add(sala101);
 repo.add(sala201);
 repo.add(sala301);
 repo.add(sala401);
 
-const start1 = new Date(
-  hoje.getFullYear(),
-  hoje.getMonth(),
-  hoje.getDate(),
-  8,
-  0,
-);
-const end1 = new Date(
-  hoje.getFullYear(),
-  hoje.getMonth(),
-  hoje.getDate(),
-  9,
-  0,
-);
-console.log(
-  "Disponíveis 08h–09h:",
-  service.listAvailable(start1, end1).map((r) => r.getNumber()),
-);
+const professor = new User("Prof. Silva", UserRole.Teacher);
+const aluno = new User("João", UserRole.Student);
 
-const start2 = new Date(
-  hoje.getFullYear(),
-  hoje.getMonth(),
-  hoje.getDate(),
-  10,
-  0,
-);
-const end2 = new Date(
-  hoje.getFullYear(),
-  hoje.getMonth(),
-  hoje.getDate(),
-  11,
-  0,
-);
-console.log(
-  "Disponíveis 10h–11h:",
-  service.listAvailable(start2, end2).map((r) => r.getNumber()),
-);
+sala101.attach(professor);
+sala101.attach(aluno);
+
+const hoje = new Date();
+const h = (hour: number, min = 0) =>
+  new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), hour, min);
+
+const res1 = new Reservation(h(10), h(12), professor, sala101.getId());
+console.log(service.createReservation(res1) ? "✓ Criada" : "✗ Negada");
+
+console.log(service.updateReservation(res1.getId(), h(14), h(16)) ? "✓ Atualizada" : "✗ Negada");
+
+const res2 = new Reservation(h(16), h(18), aluno, sala101.getId());
+service.createReservation(res2);
+console.log(service.updateReservation(res1.getId(), h(15), h(17)) ? "✓ Atualizada" : "✗ Negada");
+
+console.log(service.cancelReservation(res2.getId()) ? "✓ Cancelada" : "✗ Não encontrada");
