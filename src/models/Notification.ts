@@ -1,4 +1,9 @@
-export interface Notification {
+import { randomUUID } from "crypto";
+
+export class Notification {
   id: string;
-  message: string;
+  constructor(public message?: string) {
+    this.id = randomUUID();
+    this.message = message;
+  }
 }
