@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { User } from "./User";
+import { Classroom } from "./Classroom";
 
 export class Reservation {
   private id: string;

@@ -8,7 +8,7 @@ export abstract class Classroom {
   private reservations: Reservation[] = [];
   private interested: User[] = [];
 
-  constructor(private number: number) {
+  constructor(public number: number) {
     this.id = randomUUID();
   }
 
