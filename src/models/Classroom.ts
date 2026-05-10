@@ -1,9 +1,12 @@
 import { randomUUID } from "crypto";
 import { Reservation } from "./Reservation";
+import { User } from "./User";
+import { Notification } from "./Notification";
 
 export abstract class Classroom {
   private id: string;
   private reservations: Reservation[] = [];
+  private interested: User[] = [];
 
   constructor(private number: number) {
     this.id = randomUUID();
@@ -25,6 +28,18 @@ export abstract class Classroom {
 
   addReservation(reservation: Reservation): void {
     this.reservations.push(reservation);
+  }
+
+  attach(user: User): void {
+    if (!this.interested.includes(user)) this.interested.push(user);
+  }
+
+  remove(user: User): void {
+    this.interested = this.interested.filter((u) => u !== user);
+  }
+
+  notifyAll(message: string) {
+    this.interested.forEach((u) => u.notify(this, message));
   }
 }
 
