@@ -1,6 +1,7 @@
 import { StudyClassroomFactory } from "./factories/ClassroomFactories";
 import { ClassroomRepository } from "./repositories/ClassroomRepository";
 import { ClassroomService } from "./services/ClassroomService";
+import { ReportService } from "./services/ReportService";
 import { TeacherReservationPolitics } from "./models/ReservationPolitics";
 import { User, UserRole } from "./models/User";
 import { Reservation } from "./models/Reservation";
@@ -22,20 +23,22 @@ const h = (hour: number) =>
   new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), hour, 0);
 
 const r1 = new Reservation(h(10), h(12), aluno, sala101.getId());
-console.log(service.createReservation(r1) ? "✓" : "✗");
+console.log(service.createReservation(r1) ? "true" : "false");
 
 const r2 = new Reservation(h(10), h(12), professor, sala101.getId());
-console.log(service.createReservation(r2) ? "✓" : "✗");
+console.log(service.createReservation(r2) ? "true" : "false");
 
 service.cancelReservation(r1.getId());
 
 service.setPolitics(new TeacherReservationPolitics(randomUUID()));
 
 const r3 = new Reservation(h(14), h(16), aluno, sala101.getId());
-console.log(service.createReservation(r3) ? "✓" : "✗");
+console.log(service.createReservation(r3) ? "true" : "false");
 
 const r4 = new Reservation(h(14), h(16), professor, sala101.getId());
-console.log(service.createReservation(r4) ? "✓" : "✗");
+console.log(service.createReservation(r4) ? "true" : "false");
 
 const r5 = new Reservation(h(14), h(16), aluno, sala101.getId());
-console.log(service.createReservation(r5) ? "✓" : "✗");
+console.log(service.createReservation(r5) ? "true" : "false");
+
+new ReportService().dailyReport(hoje);
