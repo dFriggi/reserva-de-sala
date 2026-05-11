@@ -9,17 +9,17 @@ import { Reservation } from "../models/Reservation";
 
 export class ClassroomService {
   private repository = ClassroomRepository.getInstance();
-  private currentPolitics = new FirstReservationPolitics(randomUUID);
+  private currentPolitic = new FirstReservationPolitics(randomUUID());
 
   setPolitics(politics: ReservationPolitics): void {
-    this.currentPolitics = politics;
+    this.currentPolitic = politics;
   }
 
   createReservation(reservation: Reservation): boolean {
     const classroom = this.repository.findById(reservation.classroomId);
     if (!classroom) return false;
 
-    const isAllowed = this.currentPolitics.validate(
+    const isAllowed = this.currentPolitic.validate(
       reservation,
       classroom.getReservations(),
     );
@@ -32,8 +32,40 @@ export class ClassroomService {
       return true;
     }
 
-    console.log(`Reserva negada pela política: ${this.currentPolitics.id}`);
+    console.log(`Reserva negada pela política: ${this.currentPolitic.id}`);
     return false;
+  }
+
+  cancelReservation(reservationId: string): boolean {
+    const found = this.repository.findReservation(reservationId);
+    if (!found) return false;
+
+    const { classroom } = found;
+    classroom.removeReservation(reservationId);
+    classroom.notifyAll(`Reserva cancelada na sala ${classroom.getNumber()}`);
+    return true;
+  }
+
+  updateReservation(reservationId: string, newStart: Date, newEnd: Date): boolean {
+    const found = this.repository.findReservation(reservationId);
+    if (!found) return false;
+
+    const { classroom, reservation } = found;
+    const otherReservations = classroom.getReservations().filter((r) => r.getId() !== reservationId);
+    const isAllowed = this.currentPolitic.validate(
+      new Reservation(newStart, newEnd, reservation.holder, classroom.getId()),
+      otherReservations,
+    );
+
+    if (!isAllowed) {
+      console.log(`Atualização negada pela política: ${this.currentPolitic.id}`);
+      return false;
+    }
+
+    reservation.startDate = newStart;
+    reservation.endDate = newEnd;
+    classroom.notifyAll(`Reserva atualizada na sala ${classroom.getNumber()}`);
+    return true;
   }
 
   listAvailable(start: Date, end: Date): Classroom[] {

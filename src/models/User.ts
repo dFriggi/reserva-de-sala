@@ -11,7 +11,7 @@ export enum UserRole {
 export class User {
   private id: string;
   reservations?: Reservation[];
-  notifications?: Notification[];
+  notifications: Notification[] = [];
 
   constructor(
     public name: string,
@@ -25,6 +25,10 @@ export class User {
   notify(classroom: Classroom, message: string) {
     const notification = new Notification(message);
     console.log(`Notificação para ${this.name}: ${notification.message}`);
-    this.notifications?.push(notification);
+    this.notifications.push(notification);
+  }
+
+  getNotifications(): Notification[] {
+    return this.notifications;
   }
 }
