@@ -1,41 +1,29 @@
-import { StudyClassroomFactory } from "./factories/ClassroomFactories";
+import {
+  StudyClassroomFactory,
+  GroupStudyClassroomFactory,
+  LaboratoryClassroomFactory,
+  ExamClassroomFactory,
+} from "./factories/ClassroomFactories";
 import { ClassroomRepository } from "./repositories/ClassroomRepository";
-import { ClassroomService } from "./services/ClassroomService";
-import { TeacherReservationPolitics } from "./models/ReservationPolitics";
 import { User, UserRole } from "./models/User";
-import { Reservation } from "./models/Reservation";
-import { randomUUID } from "crypto";
+import { ReservationCLI } from "./view/ReservationCLI";
 
 const repo = ClassroomRepository.getInstance();
-const service = new ClassroomService();
 
-const sala101 = StudyClassroomFactory.create(101);
-repo.add(sala101);
+const rooms = [
+  StudyClassroomFactory.create(101),
+  StudyClassroomFactory.create(102),
+  GroupStudyClassroomFactory.create(201),
+  LaboratoryClassroomFactory.create(301),
+  ExamClassroomFactory.create(401),
+];
+rooms.forEach((r) => repo.add(r));
 
-const professor = new User("Prof. Silva", UserRole.Teacher);
-const aluno = new User("João", UserRole.Student);
-sala101.attach(professor);
-sala101.attach(aluno);
+const users = [
+  new User("Prof. Silva", UserRole.Teacher),
+  new User("João", UserRole.Student),
+  new User("Maria", UserRole.Student),
+];
+rooms.forEach((room) => users.forEach((u) => room.attach(u)));
 
-const hoje = new Date();
-const h = (hour: number) =>
-  new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), hour, 0);
-
-const r1 = new Reservation(h(10), h(12), aluno, sala101.getId());
-console.log(service.createReservation(r1) ? "✓" : "✗");
-
-const r2 = new Reservation(h(10), h(12), professor, sala101.getId());
-console.log(service.createReservation(r2) ? "✓" : "✗");
-
-service.cancelReservation(r1.getId());
-
-service.setPolitics(new TeacherReservationPolitics(randomUUID()));
-
-const r3 = new Reservation(h(14), h(16), aluno, sala101.getId());
-console.log(service.createReservation(r3) ? "✓" : "✗");
-
-const r4 = new Reservation(h(14), h(16), professor, sala101.getId());
-console.log(service.createReservation(r4) ? "✓" : "✗");
-
-const r5 = new Reservation(h(14), h(16), aluno, sala101.getId());
-console.log(service.createReservation(r5) ? "✓" : "✗");
+new ReservationCLI(rooms, users).run();

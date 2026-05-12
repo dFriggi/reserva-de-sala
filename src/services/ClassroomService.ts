@@ -71,4 +71,10 @@ export class ClassroomService {
   listAvailable(start: Date, end: Date): Classroom[] {
     return this.repository.listAvailable(start, end);
   }
+
+  listAllReservations(): { classroom: Classroom; reservation: Reservation }[] {
+    return this.repository.getAll().flatMap((classroom) =>
+      classroom.getReservations().map((r) => ({ classroom, reservation: r })),
+    );
+  }
 }
