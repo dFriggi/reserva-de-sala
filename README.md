@@ -15,3 +15,8 @@ npm install
 ```bash
 npm start
 ```
+
+Alunos:
+
+- Davi Gonçalves Friggi
+- Rodrigo Lopes Marques
